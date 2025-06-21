@@ -28,6 +28,7 @@ export const executeCode = async (req, res) => {
       source_code,
       language_id,
       stdin: input,
+    expected_output: expected_outputs[stdin.indexOf(input)],
     }));
 
     // 3. Send batch of submissions to judge0
@@ -149,5 +150,6 @@ export const executeCode = async (req, res) => {
   } catch (error) {
     console.error("Error executing code:", error.message);
     res.status(500).json({ error: "Failed to execute code" });
+
   }
 };
