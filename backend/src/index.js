@@ -12,12 +12,49 @@ import playlistRoutes from './routes/playlist.routes.js';
 dotenv.config();
 
 const app=express();
-app.use(
-    cors({
-      origin: "http://localhost:5173",
-      credentials: true,
-    })
-  );
+// app.use(
+//     cors({
+//       origin: "http://localhost:5173",
+//       credentials: true,
+//     })
+//   );
+  app.use(
+  cors({
+    origin: function (origin, callback) {
+      
+      if (!origin) return callback(null, true);
+
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://www.codingshastra.codes",
+        "https://codingshastra.codes",
+        "https://coding-shastra.vercel.app",
+       
+      ];
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("CORS blocked origin:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Cookie",
+      "Set-Cookie",
+      "Access-Control-Allow-Credentials",
+    ],
+    exposedHeaders: ["Set-Cookie"],
+    
+    optionsSuccessStatus: 200,
+    preflightContinue: false,
+  })
+)
 app.use(express.json());
 app.use(cookieParser());
 app.get('/', (req, res) => {
